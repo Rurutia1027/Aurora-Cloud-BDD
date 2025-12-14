@@ -53,10 +53,3 @@ jobs:
 
       - name: Dump logs on failure
         if: failure()
-        run: |
-          docker compose -f docker-compose-bdd.yml logs
-
-      - name: Shutdown BDD environment
-        if: always()
-        run: |
-          docker compose -f docker-compose-bdd.yml down -v

@@ -16,16 +16,21 @@ This repository is designed to run **production-like E2E scenarios** using Docke
 
 ## Repository Structure 
 ```
+├── LICENSE
 ├── README.md
-├── pom.xml                     # BDD test Maven project
-├── src/
-│   └── test/
-│       ├── java/               # Test runner + step definitions
-│       └── resources/
-│           └── features/       # Cucumber Feature files
-├── docker/                     # Optional scripts for local image startup
-└── scripts/
-    └── run-e2e.sh              # Convenience script to execute all tests
+├── docker-compose-bdd.macOs.yml
+├── docker-compose-bdd.yml
+├── pom.xml
+├── postgres-init
+│   └── init-db.sql
+├── scripts
+│   └── run-bdd.sh
+├── src
+│   ├── resources
+│   │   └── features
+│   └── test
+│       └── java
+└── target
 ```
 
 ## Prerequisites
