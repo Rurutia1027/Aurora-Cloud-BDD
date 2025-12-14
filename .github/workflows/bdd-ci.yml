@@ -27,10 +27,18 @@ jobs:
         run: |
           docker compose version || sudo apt-get update && sudo apt-get install -y docker-compose
 
+      - name: Determine Docker Platform
+        id: platform
+        run: |
+          echo "PLATFORM=$(docker version --format '{{.Server.Os}}/{{.Server.Arch}}')" >> $GITHUB_ENV
+          echo "Using platform: $PLATFORM"
+
       - name: Start Aurora stack (BDD runtime)
         run: |
           docker compose -f docker-compose-bdd.yml up -d
           docker compose ps
+        env:
+          PLATFORM: ${{ env.PLATFORM }}
 
       - name: Wait for system to become ready
         run: |
