@@ -41,6 +41,7 @@ services:
   apigw:
     container_name: apigw
     image: nanachi1027/aurora-apigw:latest
+    platform: linux/arm64
     ports:
       - "8083:8083"
     environment:
@@ -56,6 +57,7 @@ services:
       
   customer:
     container_name: customer
+    platform: linux/arm64
     image: nanachi1027/aurora-customer:latest
     environment:
       SPRING_PROFILES_ACTIVE: bdd
@@ -76,6 +78,7 @@ services:
   fraud:
     image: nanachi1027/aurora-fraud:latest
     container_name: fraud
+    platform: linux/arm64
     environment:
       SPRING_PROFILES_ACTIVE: bdd
       CONSUL_HOST: consul
@@ -93,6 +96,7 @@ services:
   notification:
     image: nanachi1027/aurora-notification:latest
     container_name: notification
+    platform: linux/arm64
     environment:
       SPRING_PROFILES_ACTIVE: bdd
       CONSUL_HOST: consul
