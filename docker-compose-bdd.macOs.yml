@@ -71,6 +71,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/customer
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
+      RABBITMQ_ADDR: rabbitmq:5672
     networks:
       - bdd
     depends_on:
@@ -109,7 +110,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/notification
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
-      RABBITMQ_ADDRESSES: rabbitmq:5672
+      RABBITMQ_ADDR: rabbitmq:5672
     networks:
       - bdd
     depends_on:
