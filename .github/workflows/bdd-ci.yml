@@ -30,7 +30,7 @@ jobs:
       - name: Start Aurora stack (BDD runtime)
         run: |
           docker compose -f docker-compose-bdd.yml up -d
-          docker compose ps
+          # docker compose ps
 
       - name: Wait for system to become ready
         run: |
