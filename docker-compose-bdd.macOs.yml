@@ -1,3 +1,9 @@
+# docker-compose -f docker-compose-bdd.macOs.yml up -d
+# docker compose -f docker-compose-bdd.macOsyml down -v
+# docker-compose -f docker-compose-bdd.macOs.yml ps
+# docker-compose -f docker-compose-bdd.macOs.yml logs -f apigw
+
+
 services:
   # ----------------- Infrastructure -----------------
   postgres:

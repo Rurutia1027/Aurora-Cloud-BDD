@@ -30,12 +30,12 @@ jobs:
       - name: Start Aurora stack (BDD runtime)
         run: |
           docker compose -f docker-compose-bdd.yml up -d
-          # docker compose ps
 
       - name: Wait for system to become ready
         run: |
           echo "Waiting for services to be ready..."
           sleep 30
+          docker-compose -f docker-compose-bdd.yml ps
 
       - name: Run BDD tests
         env:
