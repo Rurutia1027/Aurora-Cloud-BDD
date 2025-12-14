@@ -1,91 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
-           http://maven.apache.org/POM/4.0.0
-           http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.aurora</groupId>
+    <groupId>com.aurora.autotest</groupId>
     <artifactId>aurora-cloud-bdd</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>Aurora Cloud BDD</name>
-    <description>Independent BDD / E2E test suite for Aurora Cloud Platform</description>
+    <packaging>jar</packaging>
+    <name>Aurora Cloud Customer BDD</name>
 
-    <!-- =====================
-         Global Properties
-         ===================== -->
     <properties>
         <java.version>17</java.version>
-        <spring.boot.version>3.2.4</spring.boot.version>
-        <cucumber.version>7.15.0</cucumber.version>
-        <restassured.version>5.4.0</restassured.version>
-        <awaitility.version>4.2.0</awaitility.version>
-        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <serenity.version>4.0.46</serenity.version>
+        <serenity.cucumber.version>4.0.46</serenity.cucumber.version>
+        <cucumber.version>7.14.0</cucumber.version>
+        <restassured.version>5.5.0</restassured.version>
+        <assertj.version>3.26.3</assertj.version>
+        <parallel.tests>4</parallel.tests>
+        <webdriver.base.url>http://localhost:8080</webdriver.base.url>
+        <fastjson.version>2.0.27</fastjson.version>
     </properties>
 
-    <!-- =====================
-         Dependency Management
-         ===================== -->
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <!-- =====================
-         Dependencies
-         ===================== -->
     <dependencies>
-
-        <!-- Spring Test Context (NO business code) -->
+        <!-- Serenity Core & Screenplay -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-core</artifactId>
+            <version>${serenity.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-junit5</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-screenplay</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-screenplay-rest</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
         </dependency>
 
-        <!-- =====================
-             Cucumber (BDD Core)
-             ===================== -->
+        <!-- Serenity + Cucumber -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-cucumber</artifactId>
+            <version>${serenity.cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Cucumber -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-spring</artifactId>
+            <artifactId>cucumber-junit</artifactId>
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <!-- Testing / Assertions -->
         <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit-platform-engine</artifactId>
-            <version>${cucumber.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- =====================
-             HTTP Client (Black-box)
-             ===================== -->
+        <!-- RestAssured -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
@@ -93,70 +101,38 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- =====================
-             Async / Eventually Assertions
-             ===================== -->
+        <!-- JSON / Logging -->
         <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>${awaitility.version}</version>
-            <scope>test</scope>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
-
-        <!-- =====================
-             JDBC (Read-only verification)
-             ===================== -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- =====================
-             Logging
-             ===================== -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
-    <!-- =====================
-         Build & Test Plugins
-         ===================== -->
     <build>
         <plugins>
-
             <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
                 <configuration>
-                    <release>${java.version}</release>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
 
-            <!-- Surefire disabled -->
+            <!-- Surefire for unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <skip>true</skip>
+                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
 
-            <!-- =====================
-                 Failsafe (BDD Execution)
-                 ===================== -->
+            <!-- Failsafe for BDD / Integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -169,9 +145,20 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*ITCase.java</include>
+                        <include>**/*Steps.java</include>
+                        <include>**/*Runner.java</include>
+                    </includes>
+                    <parallel>classes</parallel>
+                    <threadCount>${parallel.tests}</threadCount>
+                    <systemPropertyVariables>
+                        <webdriver.base.url>${webdriver.base.url}</webdriver.base.url>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
