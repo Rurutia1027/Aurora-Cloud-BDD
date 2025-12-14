@@ -1,0 +1,125 @@
+version: "3.9"
+
+services:
+  # ----------------- Infrastructure -----------------
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    networks:
+      - bdd
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.9.11-management-alpine
+    networks:
+      - bdd
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  consul:
+    image: hashicorp/consul:latest
+    command: agent -dev -client=0.0.0.0
+    networks:
+      - bdd
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8500/v1/status/leader"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ----------------- Business services -----------------
+  apigw:
+    container_name: apigw
+    image: nanachi1027/aurora-apigw:latest
+    platform: linux/arm64
+    ports:
+      - "8083:8083"  # Entry point for BDD tests
+    environment:
+      - SPRING_PROFILES_ACTIVE=bdd
+      - CONSUL_HOST=consul
+    networks:
+      - bdd
+    depends_on:
+      - customer
+      - fraud
+      - notification
+      - consul
+
+  customer:
+    container_name: customer
+    image: nanachi1027/aurora-customer:latest
+    platform: linux/arm64
+    environment:
+      - SPRING_PROFILES_ACTIVE=bdd
+      - CONSUL_HOST=consul
+      - DB_URL=jdbc:postgresql://postgres:5432/customer
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - RABBITMQ_ADDR=rabbitmq:5672
+    networks:
+      - bdd
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+
+  fraud:
+    container_name: fraud
+    image: nanachi1027/aurora-fraud:latest
+    platform: linux/arm64
+    environment:
+      - SPRING_PROFILES_ACTIVE=bdd
+      - CONSUL_HOST=consul
+      - DB_URL=jdbc:postgresql://postgres:5432/fraud
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+    networks:
+      - bdd
+    depends_on:
+      postgres:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+
+  notification:
+    container_name: notification
+    image: nanachi1027/aurora-notification:latest
+    platform: linux/arm64
+    environment:
+      - SPRING_PROFILES_ACTIVE=bdd
+      - CONSUL_HOST=consul
+      - DB_URL=jdbc:postgresql://postgres:5432/notification
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - RABBITMQ_ADDR=rabbitmq:5672
+    networks:
+      - bdd
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+
+networks:
+  bdd:
+    driver: bridge
+
+volumes:
+  postgres:
