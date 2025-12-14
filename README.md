@@ -42,6 +42,77 @@ docker pull nanachi1027/aurora-notification:latest
 docker pull nanachi1027/aurora-fraud:latest
 docker pull nanachi1027/aurora-customer:latest
 ```
+> In CI/CD, images are automatically built from main repository and pushed to the registry. 
+
+## Running Locally (Docker-Based)
+Start dependencies (RabbitMQ, PostgreSQL, etc.):
+```
+docker compose -f docker/docker-compose-dev.yml up -d 
+```
+
+Run BDD tests: 
+```bash 
+./mvnw test 
+```
+
+or 
+
+```bash 
+scripts/run-e2e.sh
+```
+
+This will: 
+- Launch Testcontainers for any missing dependencies 
+- Start main microservices from Docker images 
+- Execute all Cucumber scenarios 
+
+
+## Running in Kubernetes (Kind / Dev Cluster)
+### Ensure Helm-deployed services are running: 
+
+```bash 
+helm upgrade --install customer ./helm/customer 
+helm upgrade --install notification ./helm/notification
+```
+
+### Run BDD tests against the cluster
+```bash 
+KUBECONFIG=~/.kube/kind-config ./mvnw test
+```
+> BDD tests automatically detect service endpoints via environment variables or cluster DNS. 
+
+## Running with Istio (Service Mesh)
+Inject Istio sidecars into microservices:
+
+```bash 
+kubectl label namespace default istio-injection=enabled
+kubectl rollout restart deployment customer
+kubectl rollout restart deployment notification
+```
+
+Run BDD tests as usual
+> Tests include retries / Awaitility for potential side-introduced delays. 
+
+## Example Feature 
+```gherkin
+Feature: Notification Service End-to-End 
+
+  Scenario: Customer registration triggers notification 
+    Given a new customer is registered
+    When the customer-service publishes a message to internal.exchange 
+    Then the notification-service should receive the message 
+    And the notification-service should persist a notification record
+```
+
+
+## CI/CD Integration 
+CI pipeline can: 
+- Pull latest Docker images from main repo
+- Run all BDD scenarios
+- Report success/failure with logs for tracing 
+
+GitOps flow: 
+- After successful BDD run, promote images to staging / production
 
 
 ## BDD Responsibility Statement 
@@ -52,3 +123,7 @@ BDD scenarios assert that, given a defined business context, the system behaves 
 Infrastructure concerns such as Kubernetes configuration, service mesh behavior, networking, or deployment topology are intentially **out of scope** for BDD and must be validated by dedicated platform or deployment-level tests.
 
 A failure in BDD should always a **broken business contract**, not an infrastructure or environment issue. 
+
+
+## License 
+[LICENSE](./LICENSE)
