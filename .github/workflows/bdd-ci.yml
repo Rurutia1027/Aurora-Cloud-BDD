@@ -58,12 +58,8 @@ jobs:
         run: |
           docker compose -f docker-compose-bdd.yml down -v
 
-      - name: Deploy Serenity Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Serenity Report as artifact
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/site/serenity
-          user_name: 'Rurutia1027'
-          user_email: 'Rurutia1027@users.noreply.github.com'
-          publish_branch: gh-pages  # safe to keep separate from main
-          force_orphan: true        # ensures a clean branch
+          name: serenity-report
+          path: target/site/serenity
