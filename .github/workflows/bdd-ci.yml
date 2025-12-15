@@ -59,7 +59,7 @@ jobs:
           docker compose -f docker-compose-bdd.yml down -v
 
       - name: Upload Serenity Report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: serenity-report
           path: target/site/serenity
