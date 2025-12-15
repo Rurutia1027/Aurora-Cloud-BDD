@@ -65,4 +65,5 @@ jobs:
           publish_dir: ./target/site/serenity
           user_name: 'Rurutia1027'
           user_email: 'Rurutia1027@users.noreply.github.com'
-          force_orphan: false
+          publish_branch: gh-pages  # safe to keep separate from main
+          force_orphan: true        # ensures a clean branch
