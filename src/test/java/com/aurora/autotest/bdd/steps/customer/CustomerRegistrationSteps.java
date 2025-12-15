@@ -1,6 +1,6 @@
 package com.aurora.autotest.bdd.steps.customer;
 
-import com.aurora.autotest.bdd.common.DBHelper;
+import com.aurora.autotest.bdd.common.DBHandler;
 import com.aurora.autotest.bdd.common.RestClient;
 import com.aurora.autotest.bdd.context.ApiContext;
 import com.aurora.autotest.request_body.customer_api.CustomerRegistrationRequestBody;
@@ -32,17 +32,17 @@ public class CustomerRegistrationSteps {
 
     @Then("the customer with email {string} exists in DB")
     public void customer_should_exist_in_db(String email) {
-        DBHelper db = DBHelper.getInstance();
+        DBHandler dbHandler = DBHandler.getInstance("customer");
         String query = "SELECT 1 FROM customer WHERE email = ?";
-        boolean exists = db.recordExists(query, email);
+        boolean exists = dbHandler.recordExists(query, email);
         assertThat(exists).isTrue();
     }
 
     @Then("delete the customer with email {string} from DB")
     public void delete_customer_from_db(String email) {
-        DBHelper db = DBHelper.getInstance();
+        DBHandler dbHandler = DBHandler.getInstance("customer");
         String query = "DELETE FROM customer WHERE email = ?";
-        int rowsDeleted = db.executeUpdate(query, email);
+        int rowsDeleted = dbHandler.executeUpdate(query, email);
         assertThat(rowsDeleted).isGreaterThan(0);
     }
 }
