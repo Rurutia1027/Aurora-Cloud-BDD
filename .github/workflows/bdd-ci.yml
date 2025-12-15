@@ -40,13 +40,13 @@ jobs:
       - name: Run BDD tests
         env:
           SPRING_PROFILES_ACTIVE: bdd
-        run: |
-          mvn verify \
-               -Dbdd=true \
-               -Dapi.base.url=http://localhost:8083 \
-               -Ddb.customer.url=jdbc:postgresql://localhost:5432/customer \
-               -Ddb.user=admin \
-               -Ddb.password=admin
+          API_BASE_URL: http://localhost:8083
+          DB_CUSTOMER_URL: jdbc:postgresql://localhost:5432/customer
+          DB_NOTIFICATION_URL: jdbc:postgresql://localhost:5432/notification
+          DB_FRAUD_URL: jdbc:postgresql://localhost:5432/fraud
+          DB_USER: admin
+          DB_PASSWORD: admin
+        run: ./scripts/run-bdd.sh
 
       - name: Dump logs on failure
         if: failure()

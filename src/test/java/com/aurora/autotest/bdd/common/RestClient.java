@@ -15,6 +15,11 @@ public class RestClient {
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private static final String DEFAULT_ACCEPT = "application/json";
 
+
+    public enum HttpMethod {
+        GET, POST, PUT, DELETE, PATCH
+    }
+
     /**
      * Common request function
      *
@@ -56,22 +61,22 @@ public class RestClient {
 
     // simpler functions
     public static Response post(String url, String body, String xAuthToken) {
-        return sendRequest("POST", url, body, xAuthToken, null, null);
+        return sendRequest(HttpMethod.POST.name(), url, body, xAuthToken, null, null);
     }
 
     public static Response get(String url, String xAuthToken) {
-        return sendRequest("GET", url, null, xAuthToken, null, null);
+        return sendRequest(HttpMethod.GET.name(), url, null, xAuthToken, null, null);
     }
 
     public static Response put(String url, String body, String xAuthToken) {
-        return sendRequest("PUT", url, body, xAuthToken, null, null);
+        return sendRequest(HttpMethod.PUT.name(), url, body, xAuthToken, null, null);
     }
 
     public static Response delete(String url, String xAuthToken) {
-        return sendRequest("DELETE", url, null, xAuthToken, null, null);
+        return sendRequest(HttpMethod.DELETE.name(), url, null, xAuthToken, null, null);
     }
 
     public static Response patch(String url, String body, String xAuthToken) {
-        return sendRequest("PATCH", url, body, xAuthToken, null, null);
+        return sendRequest(HttpMethod.PATCH.name(), url, body, xAuthToken, null, null);
     }
 }
