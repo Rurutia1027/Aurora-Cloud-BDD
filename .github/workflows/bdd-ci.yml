@@ -65,3 +65,4 @@ jobs:
           publish_dir: ./target/site/serenity
           user_name: 'Rurutia1027'
           user_email: 'Rurutia1027@users.noreply.github.com'
+          force_orphan: false
