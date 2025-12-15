@@ -7,6 +7,7 @@
 services:
   # ----------------- Infrastructure -----------------
   postgres:
+    container_name: postgres
     image: postgres:15
     environment:
       POSTGRES_USER: admin
@@ -23,6 +24,7 @@ services:
       retries: 10
 
   rabbitmq:
+    container_name: rabbitmq
     image: rabbitmq:3.9.11-management-alpine
     networks:
       - bdd
@@ -33,10 +35,13 @@ services:
       retries: 10
 
   consul:
+    container_name: consul
     image: hashicorp/consul:latest
     command: agent -dev -client=0.0.0.0
     networks:
       - bdd
+    ports:
+      - "8500:8500"
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:8500/v1/status/leader"]
       interval: 5s
