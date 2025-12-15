@@ -1,9 +1,9 @@
-Feature: Customer Management
-  As a system
-  I want to manage customers
-  So that I can verify their data
+Feature: Customer registration
 
-  Scenario: Create a new customer
-    Given a new customer with name "Alice" and email "alice@example.com"
-    When the customer is saved
-    Then the customer should exist in the database
+  As a system user
+  I want to register a new customer
+  So that the customer can use Aurora services
+
+  Scenario: Register a new customer successfully
+    When I register a customer with first name "John", last name "Doe", and email "john.doex@test.com"
+    Then the customer registration should be successful
