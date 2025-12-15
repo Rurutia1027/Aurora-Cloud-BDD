@@ -1,8 +1,5 @@
 package com.aurora.autotest.bdd.context;
 
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-
 import java.util.Map;
 
 public class ApiContext {
@@ -11,7 +8,7 @@ public class ApiContext {
             "customer.register", "/api/v1/customers",
             "customer.get", "/api/v1/customers/{id}",
             "notification.send", "/api/v1/notification",
-            "fraud.check", "/api/v1/fraud/check"
+            "fraud.check", "/api/v1/fraud/check/{id}"
     );
 
     public static String path(String key) {
