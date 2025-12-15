@@ -41,7 +41,12 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: bdd
         run: |
-          mvn clean verify -Dbdd=true
+          mvn verify \
+               -Dbdd=true \
+               -Dapi.base.url=http://localhost:8083 \
+               -Ddb.customer.url=jdbc:postgresql://localhost:5432/customer \
+               -Ddb.user=admin \
+               -Ddb.password=admin
 
       - name: Dump logs on failure
         if: failure()
@@ -52,3 +57,9 @@ jobs:
         if: always()
         run: |
           docker compose -f docker-compose-bdd.yml down -v
+
+      - name: Upload Serenity Report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-report
+          path: target/site/serenity
