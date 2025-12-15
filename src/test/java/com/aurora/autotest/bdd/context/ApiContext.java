@@ -1,8 +1,12 @@
 package com.aurora.autotest.bdd.context;
 
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+
 import java.util.Map;
 
 public class ApiContext {
+    // API paths per service
     private static final Map<String, String> API_PATHS = Map.of(
             "customer.register", "/api/v1/customers",
             "customer.get", "/api/v1/customers/{id}",
