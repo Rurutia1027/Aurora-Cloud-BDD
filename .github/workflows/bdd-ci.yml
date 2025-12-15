@@ -46,7 +46,7 @@ jobs:
           DB_FRAUD_URL: jdbc:postgresql://localhost:5432/fraud
           DB_USER: admin
           DB_PASSWORD: admin
-          run: ./scripts/run-bdd.sh
+        run: ./scripts/run-bdd.sh
 
       - name: Dump logs on failure
         if: failure()
