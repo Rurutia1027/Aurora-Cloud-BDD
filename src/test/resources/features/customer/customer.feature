@@ -10,8 +10,8 @@ Feature: Customer service availability and registration
     Then and the service should be healthy in consul
     And the service actuator health should be UP
 
-#  Scenario: Register a new customer successfully
-#    When I register a customer with first name "Emma", last name "Mae", and email "emma.mae@test.com"
-#    Then the customer registration should be successful
-#    And the customer with email "emma.mae@test.com" exists in DB
-#    And delete the customer with email "emma.mae@test.com" from DB
+  Scenario: Register a new customer successfully
+    When I register a customer with first name "Emma", last name "Mae", and email "emma.mae@test.com"
+    Then the customer registration should be successful
+    And the customer with email "emma.mae@test.com" exists in DB
+    And delete the customer with email "emma.mae@test.com" from DB
